@@ -1,0 +1,6 @@
+Flask
+Flask-HTTPAuth
+Flask-SQLAlchemy
+flask-migrate
+PyJWT
+pip-tools
