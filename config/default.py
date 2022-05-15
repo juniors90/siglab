@@ -19,3 +19,13 @@ APP_ENV_DEVELOPMENT = 'development'
 APP_ENV_STAGING = 'staging'
 APP_ENV_PRODUCTION = 'production'
 APP_ENV = ''
+
+# Config email
+MAIL_SERVER = 'your_server_smtp'
+MAIL_PORT = 587
+MAIL_USERNAME = 'your_email_adress'
+MAIL_PASSWORD = 'your_password'
+DONT_REPLY_FROM_EMAIL = 'from'
+ADMINS = ('your_alias@xyz.com', )
+MAIL_USE_TLS = True
+MAIL_DEBUG = False

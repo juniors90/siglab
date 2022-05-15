@@ -20,6 +20,10 @@ curl -u aanu:dontleaveme -i -X GET http://127.0.0.1:5000/api/login
 curl -u eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNjUyNTgwMDE5LjE2NDc2Mzd9.eLN4al6tLushV2DM1Cjll8v5DysOPZYjjnVPotrvGps:notrelevant -i -X GET http://127.0.0.1:5000/api/dothis
 ```
 
+```cmd
+curl -u aanu:dontleaveme -i -X GET http://127.0.0.1:5000/api/movies
+```
+
 ## COMO FUNCIONA PyJWT
 
 ```cmd
