@@ -1,6 +1,6 @@
 Flask
+Flask-Cors
 Flask-HTTPAuth
 Flask-SQLAlchemy
 flask-migrate
 PyJWT
-pip-tools

@@ -3,9 +3,10 @@ from logging.handlers import SMTPHandler
 import os
 import time
 from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from flask_httpauth import HTTPBasicAuth
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
 from backend.common.error_handling import ObjectNotFound, AppErrorBaseClass
 from backend.common.filters import format_datetime
@@ -13,6 +14,7 @@ from backend.common.filters import format_datetime
 auth = HTTPBasicAuth()
 db = SQLAlchemy()
 migrate = Migrate()  # Se crea un objeto de tipo Migrate
+cors = CORS()
 
 # Initialize variables
 def create_app(settings_module="config.development"):
@@ -27,7 +29,10 @@ def create_app(settings_module="config.development"):
     configure_logging(app)
     # Extensions
     db.init_app(app)
-    migrate.init_app(app, db)  # Se inicializa el objeto migrate
+    # Se inicializa el objeto migrate
+    migrate.init_app(app, db)
+    # cors simple usage  
+    cors.init_app(app, resources={r"/*": {"origins": "*"}})
     #  Registro de los Blueprints
 
     from .auth import auth_bp
@@ -82,11 +87,13 @@ def configure_logging(app):
         app.logger,
         logging.getLogger("sqlalchemy"),
         logging.getLogger("HTTPAuth"),
+        logging.getLogger('flask_cors'),
     ]
     handlers = []
     # Creamos un manejador para escribir los mensajes por consola
     console_handler = logging.StreamHandler()
-    console_handler.setFormatter(verbose_formatter())
+    console_handler.setFormatter(CustomFormatter())
+    #console_handler.setFormatter(verbose_formatter())
 
     if (
         (app.config["APP_ENV"] == app.config["APP_ENV_LOCAL"])
@@ -138,3 +145,29 @@ def mail_handler_formatter():
         """,
         datefmt="%d/%m/%Y %H:%M:%S",
     )
+
+import logging
+
+class CustomFormatter(logging.Formatter):
+
+    grey = "\x1b[38;20m"
+    green = '\033[92m'
+    yellow = "\x1b[33;20m"
+    red = "\x1b[31;20m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+    # format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+    format = "[%(asctime)s.%(msecs)d]\t %(levelname)s \t[%(name)s.%(funcName)s:%(lineno)d]\t %(message)s"
+
+    FORMATS = {
+        logging.DEBUG: grey + format + reset,
+        logging.INFO: green + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt, datefmt="%d/%m/%Y %H:%M:%S")
+        return formatter.format(record)

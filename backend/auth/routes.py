@@ -3,7 +3,7 @@ import os
 import time
 from flask import abort, request, jsonify, g, url_for, current_app
 import jwt
-
+from flask_cors import cross_origin
 
 from .models import User
 from . import auth_bp
@@ -75,9 +75,9 @@ movies = [
     },
 ]
 
-
+@cross_origin
 @auth_bp.route("/api/movies", methods=["GET"])
-@auth.login_required
+#@auth.login_required
 def hello():
     current_app.logger.info("Show movies of blog")
     return jsonify(movies)
